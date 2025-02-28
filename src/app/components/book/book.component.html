@@ -1,0 +1,88 @@
+<br>
+
+@if (loading) {
+  <div class="loading-container">
+    <p class="loading-text">Loading book details...</p>
+    <div class="loading-spinner"></div>
+  </div>
+} @else if (error) {
+  <div class="error-container">
+    <p class="error">{{ error }}</p>
+    <button class="btn-back" routerLink="/">Return to Home</button>
+  </div>
+} @else {
+  <article class="book-detail-container">
+    <div class="book-card">
+      <div class="book-image-container">
+        <img [src]="book.imageUrl" [alt]="book.title" class="book-cover">
+        <div class="rating-badge">
+          <span class="star">★</span> {{ book.rating }}/5
+        </div>
+      </div>
+      
+      <div class="book-content">
+        <div class="book-header">
+          <h2 class="book-title">{{ book.title }}</h2>
+          <p class="book-author">by {{ book.author }}</p>
+          <span class="genre-badge">{{ book.genreTag }}</span>
+        </div>
+        
+        <div class="book-details">
+          <p class="book-description">{{ book.description }}</p>
+          
+          <div class="book-meta">
+            <div class="price-container">
+              <span class="price-label">Price:</span>
+              <span class="price-value">${{ book.price.toFixed(2) }}</span>
+            </div>
+            
+            <div class="stock-container">
+              <span class="stock-label">Availability:</span>
+              <span class="stock-value" [class.out-of-stock]="book.stockQuantity === 0">
+                {{ book.stockQuantity > 0 ? book.stockQuantity + ' in stock' : 'Out of stock' }}
+              </span>
+            </div>
+          </div>
+        </div>
+
+        @if (authService.isLoggedIn() && authService.hasUserRole()) {
+        
+        <div class="action-panel">
+          <button 
+            class="btn-cart"
+            (click)="addToCart()"
+            [disabled]="book.stockQuantity === 0 || book.isInCart"
+            [class.btn-disabled]="book.stockQuantity === 0 || book.isInCart">
+            @if(book.stockQuantity === 0) {
+              <span class="btn-icon">🚫</span> Out of Stock
+            } @else if(book.isInCart) {
+              <span class="btn-icon">✓</span> In Cart
+            } @else {
+              <span class="btn-icon">🛒</span> Add to Cart
+            }
+          </button>
+          
+          <button 
+            class="btn-wishlist"
+            (click)="addToWishlist()"
+            [disabled]="book.isWishlisted"
+            [class.btn-disabled]="book.isWishlisted">
+            @if(book.isWishlisted) {
+              <span class="btn-icon">❤️</span> In Wishlist
+            } @else {
+              <span class="btn-icon">♡</span> Add to Wishlist
+            }
+          </button>
+        </div>
+
+      }
+      </div>
+    </div>
+    
+    <div class="navigation-bar">
+      <button class="btn-back" (click)="navigateToHome()">
+        <span class="btn-icon">←</span> Back to Home
+      </button>
+    </div>
+  </article>
+} 

@@ -1,0 +1,109 @@
+<div class="home-container">
+  <header class="hero">
+    <h1>Discover Your Next Favorite Book</h1>
+    <p class="subtitle">Get personalized book recommendations based on your interests</p>
+
+    <div class="search-container">
+      <input class="search-input" type="text" [(ngModel)]="searchQuery" (input)="updateSearch(searchQuery)" placeholder="Search books..."/>
+      
+      <div *ngFor="let book of books" class="search-result" (click)="navigateToBookDetails(book.id.toString())">
+        <p>{{ book.title }} by {{ book.author }}</p>
+      </div>
+
+    </div>
+
+  </header>
+
+  @if (loading) {
+    <p class="loading">Loading books...</p>
+  } @else if (error) {
+    <p class="error">{{ error }}</p>
+  } @else {
+    <section class="book-sections">
+      <h2 class="section-title">Featured Books by Genre</h2>
+      
+      @for (section of bookSections; track section.genre) {
+        <div class="genre-section">
+          <h2 class="genre-heading">{{ section.genre }}</h2>
+          <div class="books-grid">
+            @for (book of section.books; track book.id) {
+              <article class="book-card">
+                <div class="book-image">
+                  <img [src]="book.imageUrl" [alt]="book.title">
+                </div>
+                
+                <div class="book-info">
+                  <div class="book-header">
+                    <h3>{{ book.title }}</h3>
+                    <p class="author">{{ book.author }}</p>
+                    <span class="genre-tag">{{ book.genreTag }}</span>
+                  </div>
+                  
+                  <p class="description">{{ book.description }}</p>
+                  
+                  <div class="book-info">
+                    <p class="price text-success">${{ book.price.toFixed(2) }}</p>
+                    <div>
+                      <p class="text-primary">Rating: {{ book.rating }}/5</p>
+                      <p class="text-warning">In Stock: {{ book.stockQuantity }}</p>
+                    </div>
+                  </div>
+                </div>
+
+                @if (authService.isLoggedIn() && authService.hasUserRole()) {
+
+                <div class="action-buttons">
+                  <button
+                    class="btn-primary"
+                    (click)="addToCart(book)"
+                    [disabled]="book.stockQuantity === 0 || book.isInCart">
+                    @if(book.stockQuantity === 0) {
+                      Out of Stock
+                    } @else if(book.isInCart) {
+                      In Cart
+                    } @else {
+                      Add to Cart
+                    }
+                  </button>
+                  <button
+                    class="btn-wishlist"
+                    (click)="addToWishlist(book)"
+                    [disabled]="book.isWishlisted">
+                    @if(book.isWishlisted) {
+                      Already in Wishlist
+                    } @else {
+                      ❤️ Wishlist
+                    }
+                  </button>
+                </div>
+
+              }
+              </article>
+            }
+          </div>
+        </div>
+      }
+    </section>
+  }
+
+  <section class="how-it-works">
+    <h2>How It Works</h2>
+    <div class="steps-grid">
+      <article class="step-card">
+        <span class="step-number">1</span>
+        <h3>Tell Us What You Like</h3>
+        <p>Share your reading preferences and favorite genres</p>
+      </article>
+      <article class="step-card">
+        <span class="step-number">2</span>
+        <h3>Get Recommendations</h3>
+        <p>Our algorithm finds books that match your taste</p>
+      </article>
+      <article class="step-card">
+        <span class="step-number">3</span>
+        <h3>Start Reading</h3>
+        <p>Discover and enjoy your personalized book selections</p>
+      </article>
+    </div>
+  </section>
+</div> 

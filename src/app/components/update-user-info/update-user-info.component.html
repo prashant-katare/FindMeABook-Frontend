@@ -1,0 +1,120 @@
+<div class="container">
+  <div class="update-profile-box">
+    <h1>Update Profile</h1>
+    
+    <div *ngIf="loading" class="loading-spinner">
+      Loading...
+    </div>
+    
+    <form [formGroup]="updateForm" (ngSubmit)="onSubmit()" class="update-form" *ngIf="!loading">
+      <div class="form-group">
+        <label for="fullName">Full Name</label>
+        <input type="text" id="fullName" formControlName="fullName" placeholder="Enter your full name">
+        @if (updateForm.get('fullName')?.errors && (updateForm.get('fullName')?.touched || updateForm.get('fullName')?.dirty)) {
+          <small class="error-message">
+            @if (updateForm.get('fullName')?.errors?.['required']) { <span>Full name is required</span> }
+            @if (updateForm.get('fullName')?.errors?.['minlength']) { <span>Full name must be at least 5 characters</span> }
+          </small>
+        }
+      </div>
+
+      <div class="form-group">
+        <label for="email">Email</label>
+        <input type="email" id="email" formControlName="email" placeholder="Enter your email">
+        @if (updateForm.get('email')?.errors && (updateForm.get('email')?.touched || updateForm.get('email')?.dirty)) {
+          <small class="error-message">
+            @if (updateForm.get('email')?.errors?.['required']) { <span>Email is required</span> }
+            @if (updateForm.get('email')?.errors?.['email']) { <span>Please enter a valid email address</span> }
+          </small>
+        }
+      </div>
+
+      <div class="form-group">
+        <label for="phoneNumber">Phone Number</label>
+        <input type="tel" id="phoneNumber" formControlName="phoneNumber" placeholder="Enter phone number">
+        @if (updateForm.get('phoneNumber')?.errors && (updateForm.get('phoneNumber')?.touched || updateForm.get('phoneNumber')?.dirty)) {
+          <small class="error-message">
+            @if (updateForm.get('phoneNumber')?.errors?.['required']) { <span>Phone number is required</span> }
+            @if (updateForm.get('phoneNumber')?.errors?.['pattern']) { <span>Please enter a valid phone number. Should be 9 digits</span> }
+          </small>
+        }
+      </div>
+
+      <div formGroupName="address" class="address-section">
+        <h3>Address Information</h3>
+        
+        <div class="form-group">
+          <label for="street">Street Address</label>
+          <input type="text" id="street" formControlName="street" placeholder="Enter your street address">
+          @if (updateForm.get('address.street')?.errors && (updateForm.get('address.street')?.touched || updateForm.get('address.street')?.dirty)) {
+            <small class="error-message">
+              @if (updateForm.get('address.street')?.errors?.['required']) { <span>Street address is required</span> }
+              @if (updateForm.get('address.street')?.errors?.['minlength']) { <span>Street address must be at least 5 characters</span> }
+            </small>
+          }
+        </div>
+
+        <div class="form-group">
+          <label for="city">City</label>
+          <input type="text" id="city" formControlName="city" placeholder="Enter your city">
+          @if (updateForm.get('address.city')?.errors && (updateForm.get('address.city')?.touched || updateForm.get('address.city')?.dirty)) {
+            <small class="error-message">
+              @if (updateForm.get('address.city')?.errors?.['required']) { <span>City is required</span> }
+              @if (updateForm.get('address.city')?.errors?.['minlength']) { <span>City must be at least 2 characters</span> }
+            </small>
+          }
+        </div>
+
+        <div class="form-group">
+            <label for="state">State</label>
+            <div class="select-wrapper">
+              <select id="state" formControlName="state" (change)="onStateChange()" class="styled-select">
+                <option value="" disabled selected>Select your state</option>
+                <option *ngFor="let state of states" [value]="state">{{ state }}</option>
+              </select>
+              <div class="select-arrow"></div>
+            </div>
+            @if (updateForm.get('address.state')?.errors && (updateForm.get('address.state')?.touched || updateForm.get('address.state')?.dirty)) {
+              <small class="error-message">
+                @if (updateForm.get('address.state')?.errors?.['required']) { <span>State is required</span> }
+              </small>
+            }
+          </div>
+
+        <div class="form-group">    
+          <label for="country">Country</label>
+          <input type="text" id="country" formControlName="country" placeholder="Enter your country">
+          @if (updateForm.get('address.country')?.errors && (updateForm.get('address.country')?.touched || updateForm.get('address.country')?.dirty)) {
+            <small class="error-message">
+              @if (updateForm.get('address.country')?.errors?.['required']) { <span>Country is required</span> }
+              @if (updateForm.get('address.country')?.errors?.['minlength']) { <span>Country must be at least 2 characters</span> }
+              @if (updateForm.get('address.country')?.errors?.['pattern']) { <span>Please enter a valid country name</span> }
+                </small>
+          }
+        </div>  
+
+        <div class="form-group">
+          <label for="zipCode">Zip Code</label>
+          <input type="text" id="zipCode" formControlName="zipCode" placeholder="Enter your zip code">
+          @if (updateForm.get('address.zipCode')?.errors && (updateForm.get('address.zipCode')?.touched || updateForm.get('address.zipCode')?.dirty)) {
+            <small class="error-message">
+              @if (updateForm.get('address.zipCode')?.errors?.['required']) { <span>Zip code is required</span> }
+              @if (updateForm.get('address.zipCode')?.errors?.['pattern']) { <span>Please enter a valid zip code (e.g., 12345-1234 or 12345)</span> }
+              @if (updateForm.get('address.zipCode')?.errors?.['minlength']) { <span>Zip code must be at least 4 characters</span> }
+              @if (updateForm.get('address.zipCode')?.errors?.['maxlength']) { <span>Zip code cannot exceed 9 characters</span> }
+            </small>
+          }
+        </div>
+      </div>
+
+      @if (!formValid) {
+        <small class="error-message">Failed to update profile. Please check your information and try again.</small>
+      }
+
+      <div class="button-group">
+        <button type="submit" class="btn-primary" [disabled]="updateForm.invalid">Update Profile</button>
+        <a routerLink="/profile" class="btn-secondary">Cancel</a>
+      </div>
+    </form>
+  </div>
+</div> 

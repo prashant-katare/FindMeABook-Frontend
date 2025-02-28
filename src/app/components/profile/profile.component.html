@@ -1,0 +1,86 @@
+<div class="container">
+  <h1>My Profile</h1>
+  
+  <!-- Show error message if there's an error -->
+  @if (error) {
+    <div class="alert alert-danger">{{ error }}</div>
+  }
+
+  <!-- Show profile content when profile data is available -->
+  @if (profile) {
+    <div class="profile-content">
+      <div class="profile-section">
+        <h2 class="section-title">Personal Information</h2>
+        <!-- <div class="profile-field">
+          <span class="field-label">Email:</span>
+          <span class="field-value">{{ profile.email }}</span>
+        </div> -->
+        <div class="profile-field">
+          <span class="field-label">Full Name:</span>
+          <span class="field-value">{{ profile.fullName }}</span>
+        </div>
+
+        <div class="profile-field">
+          <span class="field-label">Username:</span>
+          <span class="field-value">{{ name }}</span>
+        </div>
+
+        <!-- @if (address; as addr) {
+          @if(addr.country) {
+            <div class="profile-field">
+              <span class="field-label">Address:</span>
+              <span class="field-value">{{ addr.street + ", " + addr.city + ", " + addr.state + ", " + addr.country + ", " + "(Zip Code: " + addr.zipCode + ")" }}</span>
+            </div>
+          } else {
+            <div class="profile-field">
+              <span class="field-label">Address:</span>
+              <span class="field-value">{{ addr.country ? 'Incomplete address' : 'No address found' }}</span>
+            </div>
+          }
+        } -->
+
+        @if (address?.phoneNumber) {
+          <div class="profile-field">
+            <span *ngIf="address?.phoneNumber != '0000000000'" class="field-label">Phone no:</span>
+            <span *ngIf="address?.phoneNumber != '0000000000' else incompletePhone" class="field-value">{{ address?.phoneNumber }}</span>
+          </div>
+          <ng-template #incompletePhone>
+            <div class="profile-field">
+              <span class="field-label">Phone no:</span>
+              <span class="field-value" style="color: red;">Phone number not found. Please update your phone number.</span>
+            </div>
+          </ng-template>
+          }
+
+        <div class="profile-field" *ngIf="address as addr">
+          <span class="field-label" *ngIf="addr?.country;">Address:</span>
+          <span class="field-value" *ngIf="addr?.country; else incompleteAddress">
+            {{ addr.street }}, {{ addr.city }}, {{ addr.state }}, {{ addr.country }} (Zip Code: {{ addr.zipCode }})
+          </span>
+        </div>
+
+        <ng-template #incompleteAddress>
+          <div class="profile-field">
+            <span class="field-label">Address:</span>
+            <span class="field-value" style="color: red;">Incomplete address. Please update your address.</span>
+          </div>
+        </ng-template>
+
+
+      </div>
+      
+      <div class="profile-section">
+        <h2>Account Settings</h2>
+        <a routerLink="/change-password" class="btn btn-primary" style="margin-right: 10px;">Change Password</a>
+        <a routerLink="/update-profile" class="btn btn-primary">Update User Info</a>
+      </div>
+    </div>
+  } @else {
+    <!-- Show loading message when profile is null -->
+    @if (!error) {
+      <div class="loading">
+        Loading profile...
+      </div>
+    }
+  }
+</div>

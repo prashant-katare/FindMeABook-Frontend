@@ -1,0 +1,41 @@
+<div class="container">
+  <div class="page-container">
+  <h1>Shopping Cart</h1>
+
+  <div class="cart-content">
+    <div class="cart-summary">
+      <div class="subtotal">
+        <h3>Subtotal:</h3>
+        <p class="total-price">{{ calculateSubtotal() | currency }}</p>
+      </div>
+      <button class="btn-primary proceed-btn" (click)="proceedToBuy()">Proceed to Buy</button>
+    </div>
+  </div>
+
+  <br>
+
+    <div class="empty-state" *ngIf="cartItems.length === 0">
+      <p>Your cart is empty.</p>
+      <a routerLink="/" class="btn-primary">Continue Shopping</a>
+    </div>
+
+    <div *ngIf="cartItems.length > 0" class="cart-items">
+      <div *ngFor="let book of cartItems" class="cart-item">
+        <img [src]="book.imageUrl" [alt]="book.title" class="book-cover">
+        <div class="book-details">
+          <h3>{{ book.title }}</h3>
+          <p class="author">by {{ book.author }}</p>
+          <p class="price">{{ book.price | currency }}</p>
+          <div class="quantity-controls">
+            <button class="quantity-btn" (click)="decreaseQuantity(book)">-</button>
+            <span class="quantity">{{ book.quantity }}</span>
+            <button class="quantity-btn" (click)="increaseQuantity(book)">+</button>
+            <button class="remove-btn" (click)="removeFromCart(book)">Remove</button>
+          </div>
+
+        </div>
+      </div>
+
+  </div>
+</div>
+</div>

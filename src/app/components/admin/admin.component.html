@@ -1,0 +1,181 @@
+<div class="admin-container">
+  <h1>Admin Dashboard</h1>
+  
+  @if (loading) {
+    <div class="loading-container">
+      <p class="loading-text">Loading books...</p>
+      <div class="loading-spinner"></div>
+    </div>
+  } @else if (error) {
+    <div class="error-container">
+      <p class="error">{{ error }}</p>
+    </div>
+  } @else {
+    <div class="admin-actions">
+      <button class="custom-orders-btn margin-right" routerLink="/admin/orders">Manage Orders</button>
+      <button class="btn-primary" routerLink="/change-password">Change Password</button>
+    </div>
+
+    <br><br>
+
+    <div class="admin-actions">
+        <button class="margin-right yellow-btn" (click)="addNewBook()">Add New Book</button>
+    </div>
+    
+    @if (showAddBookForm) {
+      <div class="add-book-form">
+        <form (ngSubmit)="submitNewBook()">
+          <div class="form-row">
+            <div class="form-group">
+              <label for="title">Title</label>
+              <input type="text" id="title" [(ngModel)]="newBook.title" name="title" required>
+            </div>
+            <div class="form-group">
+              <label for="author">Author</label>
+              <input type="text" id="author" [(ngModel)]="newBook.author" name="author" required>
+            </div>
+          </div>
+          
+          <div class="form-row">
+            <div class="form-group">
+              <label for="genreTag">Genre</label>
+              <input type="text" id="genreTag" [(ngModel)]="newBook.genreTag" name="genreTag" required>
+            </div>
+            <div class="form-group">
+              <label for="price">Price</label>
+              <input type="number" id="price" [(ngModel)]="newBook.price" name="price" step="0.01" required>
+            </div>
+          </div>
+          
+          <div class="form-row">
+            <div class="form-group">
+              <label for="stockQuantity">Stock</label>
+              <input type="number" id="stockQuantity" [(ngModel)]="newBook.stockQuantity" name="stockQuantity" required>
+            </div>
+            <div class="form-group">
+              <label for="imageUrl">Image URL</label>
+              <input type="text" id="imageUrl" [(ngModel)]="newBook.imageUrl" name="imageUrl" required>
+            </div>
+          </div>
+          
+          <div class="form-actions">
+            <button type="submit" class="btn-primary">Save Book</button>
+            <button type="button" class="btn-cancel" (click)="cancelAddBook()">Cancel</button>
+          </div>
+        </form>
+      </div>
+    }
+    
+    <div class="books-table-container">
+      <table class="books-table">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Image</th>
+            <th>Title</th>
+            <th>Author</th>
+            <th>Genre</th>
+            <th>Price</th>
+            <th>Stock</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (book of books; track book.id) {
+            <tr>
+              <td>{{ book.id }}</td>
+              <td><img [src]="book.imageUrl" [alt]="book.title" class="book-thumbnail"></td>
+              <td>{{ book.title }}</td>
+              <td>{{ book.author }}</td>
+              <td>{{ book.genreTag }}</td>
+              <td>${{ book.price.toFixed(2) }}</td>
+              <td>
+                <input type="number" [value]="book.stockQuantity" min="0" class="stock-input">
+                <button class="btn-update" (click)="updateStock(book)">Update</button>
+              </td>
+              <td>
+                <button class="btn-edit" (click)="toggleEditBook(book)">Edit</button>
+                <button class="btn-delete" (click)="deleteBook(book)">Delete</button>
+              </td>
+            </tr>
+            @if (editedBook.id === book.id) {
+              <tr class="edit-form-row">
+                <td colspan="8">
+                  <div class="edit-book-form">
+                    <form (ngSubmit)="saveEditedBook(book)">
+                      <div class="form-row">
+                        <div class="form-group">
+                          <label for="edit-title-{{book.id}}">Title</label>
+                          <input type="text" id="edit-title-{{book.id}}" [(ngModel)]="book.title" name="title" required>
+                        </div>
+                        <div class="form-group">
+                          <label for="edit-author-{{book.id}}">Author</label>
+                          <input type="text" id="edit-author-{{book.id}}" [(ngModel)]="book.author" name="author" required>
+                        </div>
+                      </div>
+                      
+                      <div class="form-row">
+                        <div class="form-group">
+                          <label for="edit-genre-{{book.id}}">Genre</label>
+                          <input type="text" id="edit-genre-{{book.id}}" [(ngModel)]="book.genreTag" name="genreTag" required>
+                        </div>
+                        <div class="form-group">
+                          <label for="edit-price-{{book.id}}">Price</label>
+                          <input type="number" id="edit-price-{{book.id}}" [(ngModel)]="book.price" name="price" step="0.01" required>
+                        </div>
+                      </div>
+                      
+                      <div class="form-row">
+                        <div class="form-group">
+                          <label for="edit-stock-{{book.id}}">Stock</label>
+                          <input type="number" id="edit-stock-{{book.id}}" [(ngModel)]="book.stockQuantity" name="stockQuantity" required>
+                        </div>
+                        <div class="form-group">
+                          <label for="edit-image-{{book.id}}">Image URL</label>
+                          <input type="text" id="edit-image-{{book.id}}" [(ngModel)]="book.imageUrl" name="imageUrl" required>
+                        </div>
+                      </div>
+                      
+                      <div class="form-actions">
+                        <button type="submit" class="btn-primary">Save Changes</button>
+                        <button type="button" class="btn-cancel" (click)="cancelEditBook(book)">Cancel</button>
+                      </div>
+                    </form>
+                  </div>
+                </td>
+              </tr>
+            }
+          }
+        </tbody>
+      </table>
+    </div>
+  }
+</div>
+
+<style>
+.form-row {
+  display: flex;
+  gap: 20px;
+  margin-bottom: 15px;
+}
+
+.form-row .form-group {
+  flex: 1;
+}
+
+.form-group {
+  margin-bottom: 0;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 5px;
+}
+
+.form-group input {
+  width: 100%;
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+</style> 

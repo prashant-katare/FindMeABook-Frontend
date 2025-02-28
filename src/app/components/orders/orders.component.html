@@ -1,0 +1,63 @@
+<div class="container">
+  <div class="orders-box">
+    <h1>My Orders</h1>
+
+    @if (loading) {
+      <div class="loading">Loading orders...</div>
+    } @else if (error) {
+      <div class="error-message">{{ error }}</div>
+    } @else if (orders.length === 0) {
+      <div class="empty-orders">
+        <p>You haven't placed any orders yet.</p>
+        <a routerLink="/" class="btn-primary">Browse Books</a>
+      </div>
+    } @else {
+      <div class="orders-list">
+        @for (order of orders; track order.id) {
+          <div class="order-card">
+            <div class="order-header">
+              <div class="order-info">
+                <span class="order-id">Order #{{ order.id }}</span>
+                <span class="order-date">{{ order.createdAt| date:'medium' }}</span>
+              </div>
+              <span class="order-status" [class]="order.status.toLowerCase()">
+                {{ order.status }}
+              </span>
+            </div>
+
+            <div class="order-items">
+              @for (item of order.orderItems; track item.bookId) {
+                <div class="order-item">
+                  <div class="item-image-container">
+                    <img 
+                      [src]="item.imageUrl || 'assets/images/book-placeholder.jpg'" 
+                      [alt]="item.bookTitle"
+                      class="item-image">
+                  </div>
+                  <div class="item-details">
+                    <span class="item-title">{{ item.bookTitle }}</span>
+                    <span class="item-quantity">Qty: {{ item.quantity }}</span>
+                  </div>
+                  <span class="item-price">${{ item.price.toFixed(2) }}</span>
+                </div>
+              }
+            </div>
+
+            <div class="order-footer">
+              <span class="order-total">Total: ${{ order.totalPrice.toFixed(2) }}</span>
+              <div class="order-actions">
+                <button class="btn-secondary" *ngIf="order.status === 'PENDING'">Cancel Order</button>
+                <button class="btn-primary" *ngIf="['DELIVERED', 'SHIPPED'].includes(order.status)">
+                  Track Package
+                </button>
+                <button class="btn-outline" *ngIf="order.status === 'DELIVERED'">
+                  Write Review
+                </button>
+              </div>
+            </div>
+          </div>
+        }
+      </div>
+    }
+  </div>
+</div> 

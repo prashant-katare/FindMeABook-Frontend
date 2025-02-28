@@ -1,0 +1,44 @@
+
+  <div class="container">
+    <div class="page-container">
+      <h1 class="page-title">My Wishlist</h1>
+
+      <div class="wishlist-content">
+        <div class="empty-state" *ngIf="favoriteItems.length === 0">
+          <p>Your wishlist is empty</p>
+          <a routerLink="/" class="primary-button">Browse Books</a>
+        </div>
+
+        <div *ngIf="favoriteItems.length > 0" class="items-list">
+          <div *ngFor="let book of favoriteItems" class="item-card">
+            <div class="item-image-section">
+              <img [src]="book.imageUrl" [alt]="book.title" class="item-thumbnail">
+            </div>
+            
+            <div class="item-info-section">
+              <h3 class="item-title">{{ book.title }}</h3>
+              <p class="item-author">by {{ book.author }}</p>
+              <p class="item-price">{{ book.price | currency }}</p>
+            </div>
+            
+            <div class="item-actions-section">
+              <button class="remove-button" (click)="removeFromFavorites(book)">
+                Remove
+              </button>
+              <button class="primary-button"
+                    (click)="addToCart(book)"
+                    [disabled]="book.isInCart || !book.inStock">
+                    @if(book.inStock === false) {
+                      Out of Stock
+                    } @else if(book.isInCart) {
+                      In Cart
+                    } @else {
+                      Add to Cart
+                    }
+                  </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>

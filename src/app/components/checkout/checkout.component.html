@@ -1,0 +1,166 @@
+<div class="container">
+  <div class="checkout-container">
+    <h1>Checkout</h1>
+    
+    @if (loading) {
+      <div class="loading-spinner">
+        <p>Processing your order...</p>
+      </div>
+    } @else if (orderPlaced) {
+      <div class="order-success">
+        <div class="success-icon">✓</div>
+        <h2>Order Placed Successfully!</h2>
+        <p>Thank you for your purchase. Your order has been received and is being processed.</p>
+        <p>A confirmation email has been sent to your registered email address.</p>
+        <button class="btn-primary" routerLink="/">Continue Shopping</button>
+      </div>
+    } @else {
+      <div class="checkout-content">
+        <!-- Order Summary Section -->
+        <div class="order-summary">
+          <h2>Order Summary</h2>
+          
+          @if (cartItems.length === 0) {
+            <p class="empty-cart-message">Your cart is empty. Please add items before checkout.</p>
+            <button class="btn-secondary" routerLink="/">Browse Books</button>
+          } @else {
+            <div class="cart-items">
+              @for (item of cartItems; track item.bookId) {
+                <div class="cart-item">
+                  <img [src]="item.imageUrl" [alt]="item.title" class="item-image">
+                  <div class="item-details">
+                    <h3>{{ item.title }}</h3>
+                    <p class="item-author">by {{ item.author }}</p>
+                    <div class="item-price-qty">
+                      <span class="item-price">{{ item.price | currency }}</span>
+                      <span class="item-quantity">Qty: {{ item.quantity }}</span>
+                    </div>
+                  </div>
+                </div>
+              }
+            </div>
+            
+            <div class="price-summary">
+              <div class="price-row">
+                <span>Subtotal:</span>
+                <span>{{ calculateSubtotal() | currency }}</span>
+              </div>
+              <div class="price-row">
+                <span>Tax (8%):</span>
+                <span>{{ calculateTax() | currency }}</span>
+              </div>
+              <div class="price-row">
+                <span>Shipping:</span>
+                <span>{{ calculateShipping() === 0 ? 'Free' : (calculateShipping() | currency) }}</span>
+              </div>
+              <div class="price-row total">
+                <span>Total:</span>
+                <span>{{ calculateTotal() | currency }}</span>
+              </div>
+            </div>
+          }
+        </div>
+        
+        <!-- Checkout Form Section -->
+        @if (cartItems.length > 0) {
+          <div class="checkout-form-container">
+            <h2>Payment Details</h2>
+            
+            <form [formGroup]="checkoutForm" (ngSubmit)="onSubmit()" class="checkout-form">
+              <!-- Shipping Address Section -->
+              <div class="form-section">
+                <h3>Shipping Address</h3>
+                <div class="address-preview">
+                    <p>{{ address?.street }}</p>
+                    <p>{{ address?.city }}, {{ address?.state }} {{ address?.zipCode }}</p>
+                    <p>{{ address?.country }}</p>
+                </div>    
+              </div>
+              
+              <!-- Payment Method Section -->
+              <div class="form-section">
+                <h3>Payment Method</h3>
+                
+                <div class="form-group">
+                  <label for="paymentMethod">Select Payment Method</label>
+                  <select id="paymentMethod" formControlName="paymentMethod" class="styled-select">
+                    <option value="creditCard">Credit Card</option>
+                    <option value="debitCard">Debit Card</option>
+                    <option value="paypal">PayPal</option>
+                  </select>
+                </div>
+                
+                @if (checkoutForm.get('paymentMethod')?.value === 'creditCard' || checkoutForm.get('paymentMethod')?.value === 'debitCard') {
+                  <div class="card-details">
+                    <div class="form-group">
+                      <label for="cardNumber">Card Number</label>
+                      <input type="text" id="cardNumber" formControlName="cardNumber" placeholder="1234 5678 9012 3456">
+                      @if (checkoutForm.get('cardNumber')?.errors && checkoutForm.get('cardNumber')?.touched) {
+                        <small class="error-message">
+                          @if (checkoutForm.get('cardNumber')?.errors?.['required']) { <span>Card number is required</span> }
+                          @if (checkoutForm.get('cardNumber')?.errors?.['pattern']) { <span>Please enter a valid 16-digit card number</span> }
+                        </small>
+                      }
+                    </div>
+                    
+                    <div class="form-group">
+                      <label for="cardName">Name on Card</label>
+                      <input type="text" id="cardName" formControlName="cardName" placeholder="John Doe">
+                      @if (checkoutForm.get('cardName')?.errors && checkoutForm.get('cardName')?.touched) {
+                        <small class="error-message">
+                          @if (checkoutForm.get('cardName')?.errors?.['required']) { <span>Name on card is required</span> }
+                          @if (checkoutForm.get('cardName')?.errors?.['minlength']) { <span>Name must be at least 3 characters</span> }
+                        </small>
+                      }
+                    </div>
+                    
+                    <div class="form-row">
+                      <div class="form-group">
+                        <label for="expiryDate">Expiry Date</label>
+                        <input type="text" id="expiryDate" formControlName="expiryDate" placeholder="MM/YY">
+                        @if (checkoutForm.get('expiryDate')?.errors && checkoutForm.get('expiryDate')?.touched) {
+                          <small class="error-message">
+                            @if (checkoutForm.get('expiryDate')?.errors?.['required']) { <span>Expiry date is required</span> }
+                            @if (checkoutForm.get('expiryDate')?.errors?.['pattern']) { <span>Please enter a valid expiry date (MM/YY)</span> }
+                          </small>
+                        }
+                      </div>
+                      
+                      <div class="form-group">
+                        <label for="cvv">CVV</label>
+                        <input type="text" id="cvv" formControlName="cvv" placeholder="123">
+                        @if (checkoutForm.get('cvv')?.errors && checkoutForm.get('cvv')?.touched) {
+                          <small class="error-message">
+                            @if (checkoutForm.get('cvv')?.errors?.['required']) { <span>CVV is required</span> }
+                            @if (checkoutForm.get('cvv')?.errors?.['pattern']) { <span>Please enter a valid CVV</span> }
+                          </small>
+                        }
+                      </div>
+                    </div>
+                  </div>
+                }
+                
+                @if (checkoutForm.get('paymentMethod')?.value === 'paypal') {
+                  <div class="paypal-info">
+                    <p>You will be redirected to PayPal to complete your payment after placing the order.</p>
+                  </div>
+                }
+              </div>
+              
+              @if (!formValid) {
+                <div class="form-error">
+                  <p class="error-message">Please fill in all required fields correctly.</p>
+                </div>
+              }
+              
+              <div class="form-actions">
+                <button type="button" class="btn-secondary" (click)="navigateToCart()">Back to Cart</button>
+                <button type="submit" class="btn-primary" (click)="onSubmit()" [disabled]="loading">Place Order</button>
+              </div>
+            </form>
+          </div>
+        }
+      </div>
+    }
+  </div>
+</div> 

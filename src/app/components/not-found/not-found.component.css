@@ -1,0 +1,56 @@
+.not-found-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background-color: #f8f9fa;
+  padding: 2rem;
+}
+
+.content {
+  text-align: center;
+  max-width: 600px;
+}
+
+h1 {
+  font-size: 8rem;
+  color: #007bff;
+  margin: 0;
+  line-height: 1;
+}
+
+h2 {
+  font-size: 2rem;
+  color: #333;
+  margin: 1rem 0;
+}
+
+p {
+  color: #666;
+  margin-bottom: 2rem;
+  font-size: 1.1rem;
+}
+
+.home-link {
+  display: inline-block;
+  padding: 0.75rem 1.5rem;
+  background-color: #007bff;
+  color: white;
+  text-decoration: none;
+  border-radius: 4px;
+  transition: background-color 0.3s ease;
+}
+
+.home-link:hover {
+  background-color: #0056b3;
+}
+
+@media (max-width: 768px) {
+  h1 {
+    font-size: 6rem;
+  }
+  
+  h2 {
+    font-size: 1.5rem;
+  }
+} 

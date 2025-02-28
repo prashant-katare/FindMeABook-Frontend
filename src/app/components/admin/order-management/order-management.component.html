@@ -1,0 +1,107 @@
+<div class="admin-container">
+  <h1>Order Management</h1>
+  
+  @if (loading) {
+    <div class="loading-container">
+      <p class="loading-text">Loading orders...</p>
+      <div class="loading-spinner"></div>
+    </div>
+  } @else if (error) {
+    <div class="error-container">
+      <p class="error">{{ error }}</p>
+    </div>
+  } @else {
+    <div class="orders-table-container">
+      @if (orders.length === 0) {
+        <div class="no-orders">
+          <p>No orders found in the system.</p>
+        </div>
+      } @else {
+        <table class="orders-table">
+          <thead>
+            <tr>
+              <th>Order ID</th>
+              <th>Customer</th>
+              <th>Date</th>
+              <th>Items</th>
+              <th>Total</th>
+              <th>Status</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (order of orders; track order.id) {
+              <tr>
+                <td>{{ order.id }}</td>
+                <td>{{ order.username }}</td>
+                <td>{{ order.createdAt | date:'medium' }}</td>
+                <td>{{ order.orderItems.length }}</td>
+                <td>${{ order.totalPrice.toFixed(2) }}</td>
+                <td>
+                  <span class="status-badge" [ngClass]="getStatusClass(order.status)">
+                    {{ order.status }}
+                  </span>
+                </td>
+                <td>
+                  <div class="status-update">
+                    <select #statusSelect [value]="order.status" class="status-select">
+                      @for (status of statusOptions; track status) {
+                        <option [value]="status" [selected]="status === order.status">{{ status }}</option>
+                      }
+                    </select>
+                    <button 
+                      class="btn-update" 
+                      (click)="updateOrderStatus(order.id, statusSelect.value)"
+                      [disabled]="statusSelect.value === order.status">
+                      Update
+                    </button>
+                  </div>
+                  <button class="btn-view" (click)="toggleOrderDetails(order.id)">View Details</button>
+                </td>
+              </tr>
+              @if (expandedOrderId === order.id) {
+                <tr class="order-details-row">
+                  <td colspan="7">
+                    <div class="order-details">
+                      <h3>Order Details</h3>
+                      <div class="order-info">
+                        <p><strong>Order ID:</strong> {{ order.id }}</p>
+                        <p><strong>Customer:</strong> {{ order.username }}</p>
+                        <p><strong>Date:</strong> {{ order.createdAt | date:'medium' }}</p>
+                        <p><strong>Status:</strong> {{ order.status }}</p>
+                        <p><strong>Total:</strong> ${{ order.totalPrice.toFixed(2) }}</p>
+                      </div>
+                      <div class="order-items">
+                        <h4>Items</h4>
+                        <table class="items-table">
+                          <thead>
+                            <tr>
+                              <th>Product</th>
+                              <th>Quantity</th>
+                              <th>Price</th>
+                              <th>Subtotal</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            @for (item of order.orderItems; track item.bookId) {
+                              <tr>
+                                <td>{{ item.bookTitle }}</td>
+                                <td>{{ item.quantity }}</td>
+                                <td>${{ item.price.toFixed(2) }}</td>
+                                <td>${{ (item.price * item.quantity).toFixed(2) }}</td>
+                              </tr>
+                            }
+                          </tbody>
+                        </table>
+                      </div>
+                    </div>
+                  </td>
+                </tr>
+              }
+            }
+          </tbody>
+        </table>
+      }
+    </div>
+  }
+</div> 

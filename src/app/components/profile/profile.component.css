@@ -1,0 +1,71 @@
+.container {
+  max-width: 800px;
+  margin: 80px auto 2rem;
+  padding: 2rem;
+}
+
+.profile-content {
+  margin-top: 2rem;
+}
+
+.profile-section {
+  background: white;
+  padding: 1.5rem;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  margin-bottom: 1.5rem;
+}
+
+.section-title {
+  color: #333;
+  font-size: 1.5rem;
+  margin-bottom: 1.25rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 2px solid #eee;
+}
+
+.profile-field {
+  display: flex;
+  margin-bottom: 1rem;
+  padding: 0.5rem 0;
+}
+
+.field-label {
+  font-weight: 600;
+  min-width: 120px;
+  color: #666;
+}
+
+.field-value {
+  color: #333;
+}
+
+.btn-primary {
+  display: inline-block;
+  padding: 0.5rem 1rem;
+  background: #007bff;
+  color: white;
+  text-decoration: none;
+  border-radius: 4px;
+  margin-top: 0.5rem;
+  transition: background-color 0.3s ease;
+}
+
+.btn-primary:hover {
+  background: #0056b3;
+}
+
+h1 {
+  color: #333;
+  margin-bottom: 1.5rem;
+}
+
+@media (max-width: 768px) {
+  .container {
+    padding: 1rem;
+  }
+  
+  .profile-section {
+    padding: 1rem;
+  }
+} 
