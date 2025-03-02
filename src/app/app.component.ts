@@ -1,8 +1,8 @@
 import { Component } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
-import { HeaderComponent } from './components/header/header.component';
-import { FooterComponent } from './components/footer/footer.component';
-import { NotFoundComponent } from "./components/not-found/not-found.component";
+import { HeaderComponent } from './components/Layouts/header/header.component';
+import { FooterComponent } from './components/Layouts/footer/footer.component';
+import { NotFoundComponent } from "./components/Pages/not-found/not-found.component";
 
 @Component({
   selector: 'app-root',

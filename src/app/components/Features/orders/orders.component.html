@@ -1,0 +1,172 @@
+<div class="orders-container">
+  <h2>Your Orders</h2>
+  
+  <div *ngIf="loading" class="loading">
+    Loading your orders...
+  </div>
+  
+  <div *ngIf="error" class="error-message">
+    {{ error }}
+  </div>
+  
+  <div *ngIf="!loading && !error && orders.length === 0" class="no-orders">
+    You don't have any orders yet.
+  </div>
+  
+  <div *ngIf="!loading && !error && orders.length > 0" class="orders-list">
+    <div *ngFor="let order of orders" class="order-card">
+      <div class="order-header">
+        <h3>Order #{{ order.id }}</h3>
+        <p class="order-date">{{ order.createdAt | date:'medium' }}</p>
+        <p class="order-status" [ngClass]="'status-' + order.status.toLowerCase()">Status: {{ order.status }}</p>
+      </div>
+      
+      <div class="order-items">
+        <h4>Order Items:</h4>
+        <div *ngFor="let item of order.orderItems" class="order-item">
+          <div class="book-image">
+            <img *ngIf="item.book?.imageUrl" [src]="item.book.imageUrl" alt="Book cover" class="book-cover">
+            <div *ngIf="!item.book?.imageUrl" class="no-image">No image</div>
+          </div>
+          
+          <div class="book-details">
+            <h4>{{ item.bookTitle }}</h4>
+            <p class="author">by {{ item.book.author }}</p>
+          </div>
+          
+          <div class="price-details">
+            <p class="unit-price">{{ item.price | currency }}</p>
+            <p class="quantity">Quantity: {{ item.quantity }}</p>
+            <p class="subtotal"><strong>Subtotal: {{ item.price * item.quantity | currency }}</strong></p>
+          </div>
+        </div>
+      </div>
+      
+      <div class="order-summary">
+        <p class="total-price"><strong>Total Price: {{ order.totalPrice | currency }}</strong></p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+.order-header {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 15px;
+}
+
+.order-date {
+  margin-left: auto;
+}
+
+.order-status {
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-weight: 500;
+}
+
+.status-pending {
+  background-color: #fff3cd;
+  color: #856404;
+}
+
+.status-confirmed {
+  background-color: #e0f7fa;
+  color: #006064;
+}
+
+.status-processing {
+  background-color: #cce5ff;
+  color: #004085;
+}
+
+.status-shipped {
+  background-color: #d4edda;
+  color: #155724;
+}
+
+.status-delivered {
+  background-color: #d1e7dd;
+  color: #0f5132;
+}
+
+.status-cancelled {
+  background-color: #f8d7da;
+  color: #721c24;
+}
+
+/* Add spacing between book image and details */
+.order-item {
+  display: flex;
+  gap: 20px;
+  align-items: flex-start;
+  margin-bottom: 15px;
+}
+
+.book-image {
+  min-width: 80px;
+}
+
+.book-cover {
+  max-width: 100%;
+  height: auto;
+  border-radius: 4px;
+}
+
+.no-image {
+  width: 80px;
+  height: 120px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #f0f0f0;
+  border-radius: 4px;
+  color: #666;
+  font-size: 0.8rem;
+}
+
+/* Add colors to data elements */
+.book-details h4 {
+  color: #2c3e50;
+  margin-bottom: 5px;
+}
+
+.author {
+  color: #7f8c8d;
+  font-style: italic;
+}
+
+.unit-price {
+  color: #3498db;
+  font-weight: 500;
+}
+
+.quantity {
+  color: #7f8c8d;
+}
+
+.subtotal {
+  color: #2c3e50;
+}
+
+.total-price {
+  color: #e74c3c;
+  font-size: 1.1rem;
+}
+
+.order-card {
+  border-left: 4px solid #3498db;
+  padding-left: 15px;
+  margin-bottom: 20px;
+  background-color: #f9f9f9;
+  border-radius: 5px;
+  padding: 15px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.order-header h3 {
+  color: #2980b9;
+}
+</style> 

@@ -1,18 +1,18 @@
 import { Routes } from '@angular/router';
-import { AboutComponent } from './components/about/about.component';
-import { FavoritesComponent } from './components/favorites/favorites.component';
-import { CartComponent } from './components/cart/cart.component';
-import { ProfileComponent } from './components/profile/profile.component';
-import { LoginComponent } from './components/login/login.component';
-import { SignupComponent } from './components/signup/signup.component';
-import { ChangePasswordComponent } from './components/change-password/change-password.component';
-import { BookComponent } from './components/book/book.component';
-import { UpdateUserInfoComponent } from './components/update-user-info/update-user-info.component';
-import { CheckoutComponent } from './components/checkout/checkout.component';
-import { OrdersComponent } from './components/orders/orders.component';
-import { HomeComponent } from './components/home/home.component';
-import { AdminComponent } from './components/admin/admin.component';
-import { OrderManagementComponent } from './components/admin/order-management/order-management.component';
+import { AboutComponent } from './components/Pages/about/about.component';
+import { FavoritesComponent } from './components/Features/favorites/favorites.component';
+import { CartComponent } from './components/Features/cart/cart.component';
+import { ProfileComponent } from './components/Pages/profile/profile.component';
+import { LoginComponent } from './components/Auth/login/login.component';
+import { SignupComponent } from './components/Auth/signup/signup.component';
+import { ChangePasswordComponent } from './components/Auth/change-password/change-password.component';
+import { BookComponent } from './components/Pages/book/book.component';
+import { UpdateUserInfoComponent } from './components/Features/update-user-info/update-user-info.component';
+import { CheckoutComponent } from './components/Features/checkout/checkout.component';
+import { OrdersComponent } from './components/Features/orders/orders.component';
+import { HomeComponent } from './components/Pages/home/home.component';
+import { AdminDashboardComponent } from './components/admin-dashboard/admin-dashboard.component';
+import { OrderManagementComponent } from './components/admin-dashboard/order-management/order-management.component';
 // import { EditBookComponent } from './components/admin/edit-book/edit-book.component';
 // import { AddBookComponent } from './components/admin/add-book/add-book.component';
 
@@ -29,7 +29,7 @@ export const routes: Routes = [
   { path: 'update-profile', component: UpdateUserInfoComponent},
   { path: 'checkout', component: CheckoutComponent},
   { path: 'orders', component: OrdersComponent},
-  { path: 'admin', component: AdminComponent},
+  { path: 'admin-dashboard', component: AdminDashboardComponent},
   { path: 'admin/orders', component: OrderManagementComponent},
   // { path: 'admin/edit-book/:id', component: EditBookComponent, canActivate: [AdminGuard] },
   // { path: 'admin/add-book', component: AddBookComponent, canActivate: [AdminGuard] },
